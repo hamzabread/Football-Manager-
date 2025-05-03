@@ -16,7 +16,7 @@ html, body {
     display: block;
     color: white;
     text-decoration: none;
-    margin: 100px 3px;
+    margin: 80px 4px;
     font-size: 1.3em;
 }
 
@@ -84,6 +84,7 @@ header{
     background-color: #2A003F;
     height: 100px;
     width: 100%;
+    z-index: 500;
 }
 
 header p{
@@ -100,6 +101,8 @@ header p{
     justify-content: center;
     text-align: center;
     padding: 20px;
+    z-index: 1;
+    position: relative;
 }
   
 .hero-content {
@@ -142,34 +145,35 @@ header p{
     background-color: #9C4DCC;
 }
   
-.transfer-market {
+.functions {
     background-color: #2A003F;
     color: white;
     padding: 60px 20px;
     text-align: center;
-    margin-top: 20px;
+    margin-top: 60px; 
+    position: relative; 
 }
 
-.transfer-market h2 {
+.functions h2 {
     font-size: 3em;
     color: #CBA6F7;
     margin-bottom: 20px;
 }
 
-.transfer-market p {
+.functions p {
     font-size: 1.5em;
     color: #e0e0e0;
     margin-bottom: 30px;
 }
 
-.transfer-market .hero-btn {
+.functions .hero-btn {
     background-color: #7F3FBF;
     padding: 12px 30px;
     font-size: 1.2em;
     transition: 0.3s;
 }
 
-.transfer-market .hero-btn:hover {
+.functions .hero-btn:hover {
     background-color: #9C4DCC;
 }
 
