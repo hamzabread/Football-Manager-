@@ -7,17 +7,21 @@
         <link href="./styles.css" rel="stylesheet">
     </head>
     <body>
-        <nav>
-            <h1 class="bold underline">Menu</h1>
-            <a class="block" href="#Overview">Overview</a>
-            <a class="block" href="#StartingXI">StartingXI</a>
+        <button id="toggleSidebar">☰ Menu</button>
+        <nav class="nav-block" id="sidebar">
+            <a class="block bold" href="#Overview">Overview</a>
+            <a class="block " href="#StartingXI">StartingXI</a>
             <a class="block" href="#Substitutes">Substitutes</a>
             <a class="block" href="#TransferMarket">TransferMarket</a>
             <a class="block" href="#Training">Training</a>
         </nav>
+        <header>
+            <p>Football Manager</p>
+        </header>
+        </header>
         <main>
             <section class="overview" id="Overview">
-                <h1>Overview</h1>
+                <h1 class="bold">Welcome!</h1>
                 <div class="gallery">
                     <img src="https://i.pinimg.com/736x/0a/c1/86/0ac1863568e744d92de349b56a91e177.jpg">
                     <img src="https://i.pinimg.com/736x/71/83/3d/71833d225f8e25fffaf4511bbec2daa8.jpg">
@@ -25,5 +29,13 @@
                 </div>
             </section>
         </main>
+        <script>
+            const sidebar = document.getElementById("sidebar");
+            const toggleBtn = document.getElementById("toggleSidebar");
+    
+            toggleBtn.addEventListener("click", () => {
+                sidebar.classList.toggle("closed");
+            });
+        </script>
     </body>
 </html>
