@@ -142,15 +142,36 @@ header p{
     background-color: #9C4DCC;
 }
   
-.hero-btn.secondary {
-    background-color: transparent;
-    border: 2px solid #7F3FBF;
-}
-  
-.hero-btn.secondary:hover {
-    background-color: #7F3FBF;
+.transfer-market {
+    background-color: #2A003F;
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+    margin-top: 20px;
 }
 
+.transfer-market h2 {
+    font-size: 3em;
+    color: #CBA6F7;
+    margin-bottom: 20px;
+}
+
+.transfer-market p {
+    font-size: 1.5em;
+    color: #e0e0e0;
+    margin-bottom: 30px;
+}
+
+.transfer-market .hero-btn {
+    background-color: #7F3FBF;
+    padding: 12px 30px;
+    font-size: 1.2em;
+    transition: 0.3s;
+}
+
+.transfer-market .hero-btn:hover {
+    background-color: #9C4DCC;
+}
 
 main{
     padding: 20px;

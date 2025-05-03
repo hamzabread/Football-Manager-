@@ -9,8 +9,8 @@
     <body>
         <button id="toggleSidebar">☰ Menu</button>
         <nav class="nav-block" id="sidebar">
-            <a class="block bold" href="#Overview">Overview</a>
-            <a class="block " href="#StartingXI">StartingXI</a>
+            <a class="block" href="#Overview">Overview</a>
+            <a class="block" href="#StartingXI">StartingXI</a>
             <a class="block" href="#Substitutes">Substitutes</a>
             <a class="block" href="#TransferMarket">TransferMarket</a>
             <a class="block" href="#Training">Training</a>
@@ -20,12 +20,17 @@
                 <p>⚽Football Manager 2025</p>
                 <p class="tagline">Build your dream team. Dominate the league.</p>
                 <div class="hero-buttons">
-                  <a href="#StartingXI" class="hero-btn">Start Game</a>
-                  <a href="#Overview" class="hero-btn secondary">Explore</a>
+                  <a href="#StartingXI" class="hero-btn">Start Managing</a>
                 </div>
             </div>
         </header>
-        </header>
+        <section class="transfer-market" id="TransferMarket">
+            <div class="transfer-market-content">
+                <h2>Welcome to the Transfer Market</h2>
+                <p>Browse available players, negotiate transfers, and build your dream team.</p>
+                <a href="transfer-market.html" class="hero-btn">Go to Transfer Market</a>
+            </div>
+        </section>
         <script>
             const sidebar = document.getElementById("sidebar");
             const toggleBtn = document.getElementById("toggleSidebar");
