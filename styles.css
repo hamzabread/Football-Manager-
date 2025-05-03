@@ -4,14 +4,12 @@
     padding: 0;
 }
 
-html {
+html, body {
     scroll-behavior: smooth;
-}
-
-body{
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #1E0033;
     color: white;
+    height: 100%;   
 }
 
 .block{
@@ -24,6 +22,7 @@ body{
 
 .block:hover{
     text-decoration: underline;
+    color: #7F3FBF;
 }
 
 .nav-block{
@@ -51,10 +50,14 @@ body{
     padding: 15px 15px;
     font-size: 1.2em;
     cursor: pointer;
-    background-color: #121222;
+    background-color: #7F3FBF;
     color: white;
     border: none;
     border-radius: 5px;
+}
+
+#toggleSidebar:hover{
+   background-color: #9C4DCC;
 }
 
 h1{
@@ -78,7 +81,7 @@ header{
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #121222;
+    background-color: #2A003F;
     height: 100px;
     width: 100%;
 }
@@ -89,6 +92,66 @@ header p{
     margin: 35px auto;
 }
 
+.hero {
+    background: linear-gradient(rgba(30, 0, 51, 0.9), rgba(30, 0, 51, 0.9)), url('https://i.pinimg.com/736x/71/83/3d/71833d225f8e25fffaf4511bbec2daa8.jpg') no-repeat center center/cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+  
+.hero-content {
+    max-width: 800px;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+  
+.hero h1 {
+    font-size: 4em;
+    color: #CBA6F7;
+    margin-bottom: 20px;
+}
+  
+.tagline {
+    font-size: 1.5em;
+    color: #e0e0e0;
+    margin-bottom: 30px;
+}
+  
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+  
+.hero-btn {
+    text-decoration: none;
+    background-color: #7F3FBF;
+    color: white;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+  
+.hero-btn:hover {
+    background-color: #9C4DCC;
+}
+  
+.hero-btn.secondary {
+    background-color: transparent;
+    border: 2px solid #7F3FBF;
+}
+  
+.hero-btn.secondary:hover {
+    background-color: #7F3FBF;
+}
+
+
 main{
     padding: 20px;
     margin-top: 100px;
@@ -97,19 +160,4 @@ main{
 .nav-block.closed + main {
     margin-left: 30px;
     margin-top: 50px;
-}
-
-.gallery{
-    display: flex;
-    gap: 16px;
-    padding: 20px 10px;
-    justify-content: center;
-}
-
-.gallery img{
-    width: 100%;
-    max-width: 350px;
-    height: 600px;
-    object-fit: cover;
-    border-radius: 10px;
 }
