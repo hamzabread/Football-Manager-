@@ -2,82 +2,241 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Starting XI - All Players</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starting XI</title>
     <style>
         body {
+            background-color: #1e1e2f; /* Dark purple background */
+            color: #f0f0f0; /* Light gray text */
             font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
         }
-
         h1 {
             text-align: center;
-            margin-bottom: 30px;
+            color: #9b59b6; /* Purple color */
+            padding-top: 20px;
         }
-
-        table {
+        .table-container {
             width: 90%;
-            margin: auto;
-            border-collapse: collapse;
-            background-color: #fff;
+            margin: 30px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #2f2f47; /* Darker background for table */
+        }
         th, td {
-            padding: 12px;
+            padding: 15px;
             text-align: center;
             border-bottom: 1px solid #ddd;
         }
-
         th {
-            background-color: #333;
+            background-color: #6a1b9a; /* Purple header */
+            color: #fff;
+        }
+        td {
+            color: #e0e0e0;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .available {
+            background-color: #388e3c; /* Green */
+            color: #fff;
+        }
+        .injured {
+            background-color: #d32f2f; /* Red */
+            color: #fff;
+        }
+        .fitness {
+            background-color: #ffb74d; /* Orange */
+            color: #fff;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .buttons button {
+            padding: 5px 10px;
+            background-color: #9b59b6; /* Purple */
+            border: none;
             color: white;
+            cursor: pointer;
+            border-radius: 5px;
         }
-
-        tr:hover {
-            background-color: #f1f1f1;
+        .buttons button:hover {
+            background-color: #8e44ad; /* Darker purple on hover */
         }
-
-        .yes {
-            color: red;
-            font-weight: bold;
+        .form-container {
+            width: 90%;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #2f2f47;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
-        .no {
-            color: green;
-            font-weight: bold;
+        .form-container input, .form-container select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #3f3f57;
+            color: #fff;
+        }
+        .form-container button {
+            background-color: #9b59b6;
+            color: white;
+            cursor: pointer;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        .form-container button:hover {
+            background-color: #8e44ad;
         }
     </style>
 </head>
 <body>
+    <h1>Starting XI</h1>
+    
+    <!-- Add Player Form -->
+    <div class="form-container">
+        <h3>Add New Player</h3>
+        <form id="add-player-form">
+            <input type="text" id="name" placeholder="Player Name" required>
+            <input type="number" id="age" placeholder="Age" required>
+            <input type="text" id="nationality" placeholder="Nationality" required>
+            <input type="text" id="position" placeholder="Position" required>
+            <input type="number" id="jersey_number" placeholder="Jersey Number" required>
+            <select id="fitness_level">
+                <option value="">Select Fitness Level</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+            <select id="status">
+                <option value="">Select Status</option>
+                <option value="available">Available</option>
+                <option value="injured">Injured</option>
+            </select>
+            <button type="submit">Add Player</button>
+        </form>
+    </div>
 
-    <h1>Squad List</h1>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Age</th>
+                    <th>Nationality</th>
+                    <th>Jersey Number</th>
+                    <th>Fitness Level</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="player-table-body">
+                <!-- Players will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Nationality</th>
-                <th>Position</th>
-                <th>Jersey #</th>
-                <th>Injured?</th>
-                <th>Fitness Level</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for player in players %}
-            <tr>
-                <td>{{ player[0] }}</td>
-                <td>{{ player[1] }}</td>
-                <td>{{ player[2] }}</td> 
-                <td>{{ player[3] }}</td>
-                <td>{{ player[4] }}</td>
-                <td class="{{ 'yes' if player[5] else 'no' }}">{{ 'Yes' if player[5] else 'No' }}</td> <!-- Injured -->
-                <td>{{ player[6] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <script>
+        // Fetch players and populate table
+        function fetchPlayers() {
+            fetch('/players/')
+                .then(response => response.json())
+                .then(players => {
+                    const tableBody = document.getElementById('player-table-body');
+                    tableBody.innerHTML = ''; // Clear the table
 
+                    players.forEach(player => {
+                        const row = document.createElement('tr');
+
+                        row.innerHTML = `
+                            <td>${player.name}</td>
+                            <td>${player.position}</td>
+                            <td>${player.age}</td>
+                            <td>${player.nationality}</td>
+                            <td>${player.jersey_number}</td>
+                            <td class="fitness">${player.fitness_level}</td>
+                            <td class="status ${player.is_available ? 'available' : 'injured'}">
+                                ${player.is_available ? 'Available' : 'Injured'}
+                            </td>
+                            <td class="buttons">
+                                <button onclick="updatePlayer(${player.player_id})">Update</button>
+                                <button onclick="deletePlayer(${player.player_id})">Delete</button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching players:', error));
+        }
+
+        // Add player
+        document.getElementById('add-player-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const newPlayer = {
+                name: document.getElementById('name').value,
+                age: document.getElementById('age').value,
+                nationality: document.getElementById('nationality').value,
+                position: document.getElementById('position').value,
+                jersey_number: document.getElementById('jersey_number').value,
+                fitness_level: document.getElementById('fitness_level').value,
+                is_available: document.getElementById('status').value === 'available',
+                is_injured: document.getElementById('status').value === 'injured',
+                current_team_id: 1 // Assuming a default team ID, change as needed
+            };
+
+            fetch('/players/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newPlayer)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Player added successfully');
+                fetchPlayers(); // Refresh the table after adding a player
+            })
+            .catch(error => console.error('Error adding player:', error));
+        });
+
+        // Update player
+        function updatePlayer(player_id) {
+            // Implement the update functionality here
+            alert(`Update player with ID: ${player_id}`);
+        }
+
+        // Delete player
+        function deletePlayer(player_id) {
+            if (confirm('Are you sure you want to delete this player?')) {
+                fetch(`/players/${player_id}`, {
+                    method: 'DELETE',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    fetchPlayers(); // Refresh the table after deletion
+                })
+                .catch(error => console.error('Error deleting player:', error));
+            }
+        }
+
+        // Initialize players list on page load
+        window.onload = fetchPlayers;
+    </script>
 </body>
 </html>
