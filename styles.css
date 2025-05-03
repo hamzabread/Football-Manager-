@@ -26,9 +26,9 @@ html, body {
 }
 
 .nav-block{
-    background-color: #2A003F;
+    background-color: #2b014a;
     width: 250px;
-    margin: 0;
+    margin: 100;
     padding: 22px;
     height: 100%;
     position: fixed;
