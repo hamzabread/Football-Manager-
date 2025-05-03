@@ -490,7 +490,7 @@ CREATE OR REPLACE FUNCTION archive_user_data_before_delete() RETURNS TRIGGER AS 
 DECLARE
     deleted_user_id INT;
 BEGIN
-    -- Step 1: Insert into Deleted_Users and get the new deleted_user_id
+    -- Archive user info into Deleted_Users
     INSERT INTO Deleted_Users (
         original_user_id,
         user_uuid,
@@ -515,92 +515,13 @@ BEGIN
     )
     RETURNING deleted_user_id INTO deleted_user_id;
 
-    -- Step 2: Archive related data
-    INSERT INTO Deleted_UserTeams (deleted_user_id, team_id)
-    SELECT deleted_user_id, team_id FROM UserTeams WHERE user_id = OLD.user_id;
+    -- Delete all UserTeams connections to sever team links
+    DELETE FROM UserTeams WHERE user_id = OLD.user_id;
 
-    INSERT INTO Deleted_Teams (deleted_user_id, team_id, name, coach_name, stadium_name)
-    SELECT deleted_user_id, t.team_id, t.name, t.coach_name, t.stadium_name
-    FROM Teams t
-    JOIN UserTeams ut ON t.team_id = ut.team_id
-    WHERE ut.user_id = OLD.user_id;
-
-    INSERT INTO Deleted_Players (deleted_user_id, player_id, name, age, nationality, position, jersey_number, is_injured, is_available, fitness_level, current_team_id)
-    SELECT deleted_user_id, p.player_id, p.name, p.age, p.nationality, p.position, p.jersey_number, p.is_injured, p.is_available, p.fitness_level, p.current_team_id
-    FROM Players p
-    JOIN Teams t ON p.current_team_id = t.team_id
-    JOIN UserTeams ut ON ut.team_id = t.team_id
-    WHERE ut.user_id = OLD.user_id;
-
-    INSERT INTO Deleted_Player_Injuries (deleted_user_id, player_injury_id, player_id, injury_id, injury_date, recovery_date)
-    SELECT deleted_user_id, pi.player_injury_id, pi.player_id, pi.injury_id, pi.injury_date, pi.recovery_date
-    FROM Player_Injuries pi
-    JOIN Players p ON pi.player_id = p.player_id
-    JOIN Teams t ON p.current_team_id = t.team_id
-    JOIN UserTeams ut ON ut.team_id = t.team_id
-    WHERE ut.user_id = OLD.user_id;
-
-    INSERT INTO Deleted_Fitness_Routines (deleted_user_id, routine_id, name, description, intensity_level)
-    SELECT DISTINCT deleted_user_id, fr.routine_id, fr.name, fr.description, fr.intensity_level
-    FROM Fitness_Routines fr
-    JOIN Player_Fitness pf ON fr.routine_id = pf.routine_id
-    JOIN Players p ON pf.player_id = p.player_id
-    JOIN Teams t ON p.current_team_id = t.team_id
-    JOIN UserTeams ut ON ut.team_id = t.team_id
-    WHERE ut.user_id = OLD.user_id;
-
-    INSERT INTO Deleted_Player_Fitness (deleted_user_id, player_fitness_id, player_id, routine_id, start_date, end_date)
-    SELECT deleted_user_id, pf.player_fitness_id, pf.player_id, pf.routine_id, pf.start_date, pf.end_date
-    FROM Player_Fitness pf
-    JOIN Players p ON pf.player_id = p.player_id
-    JOIN Teams t ON p.current_team_id = t.team_id
-    JOIN UserTeams ut ON ut.team_id = t.team_id
-    WHERE ut.user_id = OLD.user_id;
-
-    INSERT INTO Deleted_Training_Routines (deleted_user_id, training_id, name, description, focus_area, duration_minutes)
-    SELECT DISTINCT deleted_user_id, tr.training_id, tr.name, tr.description, tr.focus_area, tr.duration_minutes
-    FROM Training_Routines tr
-    JOIN Player_Training pt ON tr.training_id = pt.training_id
-    JOIN Players p ON pt.player_id = p.player_id
-    JOIN Teams t ON p.current_team_id = t.team_id
-    JOIN UserTeams ut ON ut.team_id = t.team_id
-    WHERE ut.user_id = OLD.user_id;
-
-    INSERT INTO Deleted_Player_Training (deleted_user_id, player_training_id, player_id, training_id, date)
-    SELECT deleted_user_id, pt.player_training_id, pt.player_id, pt.training_id, pt.date
-    FROM Player_Training pt
-    JOIN Players p ON pt.player_id = p.player_id
-    JOIN Teams t ON p.current_team_id = t.team_id
-    JOIN UserTeams ut ON ut.team_id = t.team_id
-    WHERE ut.user_id = OLD.user_id;
-
-    INSERT INTO Deleted_Transfers (deleted_user_id, transfer_id, player_id, from_team, to_team, transfer_fee, transfer_date)
-    SELECT deleted_user_id, tr.transfer_id, tr.player_id, tr.from_team, tr.to_team, tr.transfer_fee, tr.transfer_date
-    FROM Transfers tr
-    JOIN Players p ON tr.player_id = p.player_id
-    JOIN Teams t ON p.current_team_id = t.team_id
-    JOIN UserTeams ut ON ut.team_id = t.team_id
-    WHERE ut.user_id = OLD.user_id;
-
-    INSERT INTO Deleted_League_Standings (deleted_user_id, team_id, games_played, wins, draws, losses, goals_for, goals_against, points)
-    SELECT deleted_user_id, ls.team_id, ls.games_played, ls.wins, ls.draws, ls.losses, ls.goals_for, ls.goals_against, ls.points
-    FROM League_Standings ls
-    JOIN UserTeams ut ON ls.team_id = ut.team_id
-    WHERE ut.user_id = OLD.user_id;
-
-    INSERT INTO Deleted_TransferMarket (deleted_user_id, listing_id, player_id, current_team_id, asking_price, listing_date, is_available)
-    SELECT deleted_user_id, tm.listing_id, tm.player_id, tm.current_team_id, tm.asking_price, tm.listing_date, tm.is_available
-    FROM TransferMarket tm
-    JOIN Players p ON tm.player_id = p.player_id
-    JOIN Teams t ON p.current_team_id = t.team_id
-    JOIN UserTeams ut ON ut.team_id = t.team_id
-    WHERE ut.user_id = OLD.user_id;
-
+    -- Done — no need to archive players, teams, or other data
     RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
-
-
 
 CREATE TRIGGER trigger_archive_user_data
 BEFORE DELETE ON users
